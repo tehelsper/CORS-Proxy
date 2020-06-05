@@ -37,7 +37,7 @@ proxy.route({
     proxy: {
       passThrough: true,
       mapUri: function (request, callback) {
-        request.host = request.params.host
+        request.host = 'localhost:8332'
         request.path = request.path.substr(request.params.host.length + 1)
         request.headers['host'] = request.host
         var query = request.url.search ? request.url.search : ''
