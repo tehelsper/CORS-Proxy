@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "ejs": "^2.3.3",
+    "file-system": "^2.2.2",
     "good": "^6.3.0",
     "good-console": "^5.0.3",
     "h2o2": "^4.0.1",
