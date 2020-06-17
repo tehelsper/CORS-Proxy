@@ -4,13 +4,22 @@ var Hapi = require('hapi')
 var plugin = require('../index')
 var good = require('good')
 var loggerOptions = require('../lib/logger-options')
+var fs = require('file-system')
 
 var server = new Hapi.Server({})
 var port = parseInt(process.env.CORSPROXY_PORT || process.env.PORT || 1337, 10)
 var host = (process.env.CORSPROXY_HOST || 'localhost');
 var target = (process.env.CORSPROXY_TARGET || null);
 var maxPayload = parseInt(process.env.CORSPROXY_MAX_PAYLOAD || 1048576, 10)
-var proxy = server.connection({ port: port, labels: ['proxy'], host: host})
+var options = {port: port, labels: ['proxy'], host: host}
+if (process.env.CORSPROXY_USE_HTTPS) {
+  var tls = {
+    key: fs.readFileSync(process.env.CORSPROXY_HTTPS_KEY),
+    cert: fs.readFileSync(process.env.CORSPROXY_HTTPS_CERT)
+  };
+  options = {port: port, labels: ['proxy'], tls: tls, host: host}
+}
+var proxy = server.connection(options)
 
 server.register(require('inert'), function () {})
 server.register(require('h2o2'), function () {})
